@@ -214,10 +214,53 @@ var version =
   , "getChatHistory"            : ["padID", "start", "end"]
   , "getChatHead"               : ["padID"]
   }
+, "TEST":
+  { "createGroup"               : []
+  , "createGroupIfNotExistsFor" : ["groupMapper"]
+  , "deleteGroup"               : ["groupID"]
+  , "listPads"                  : ["groupID"]
+  , "listAllPads"               : []
+  , "createDiffHTML"	        : ["padID", "startRev", "endRev"]
+  , "createPad"                 : ["padID", "text"]
+  , "createGroupPad"            : ["groupID", "padName", "text"]
+  , "createAuthor"              : ["name"]
+  , "createAuthorIfNotExistsFor": ["authorMapper" , "name"]
+  , "listPadsOfAuthor"          : ["authorID"]
+  , "createSession"             : ["groupID", "authorID", "validUntil"]
+  , "deleteSession"             : ["sessionID"]
+  , "getSessionInfo"            : ["sessionID"]
+  , "listSessionsOfGroup"       : ["groupID"]
+  , "listSessionsOfAuthor"      : ["authorID"]
+  , "getText"                   : ["padID", "rev"]
+  , "getAttributePool"          : ["padID"]
+  , "setText"                   : ["padID", "text"]
+  , "getHTML"                   : ["padID", "rev"]
+  , "setHTML"                   : ["padID", "html"]
+  , "getRevisionsCount"         : ["padID"]
+  , "getRevisionOfHead"         : ["padID"]
+  , "getRevisionChangeset"      : ["padID", "rev"]
+  , "getLastEdited"             : ["padID"]
+  , "deletePad"                 : ["padID"]
+  , "getReadOnlyID"             : ["padID"]
+  , "setPublicStatus"           : ["padID", "publicStatus"]
+  , "getPublicStatus"           : ["padID"]
+  , "setPassword"               : ["padID", "password"]
+  , "isPasswordProtected"       : ["padID"]
+  , "listAuthorsOfPad"          : ["padID"]
+  , "padUsersCount"             : ["padID"]
+  , "getAuthorName"             : ["authorID"]
+  , "padUsers"                  : ["padID"]
+  , "sendClientsMessage"        : ["padID", "msg"]
+  , "listAllGroups"             : []
+  , "checkToken"                : []
+  , "getChatHistory"            : ["padID"]
+  , "getChatHistory"            : ["padID", "start", "end"]
+  , "getChatHead"               : ["padID"]
+  }
 };
 
 // set the latest available API version here
-exports.latestApiVersion = '1.2.7';
+exports.latestApiVersion = 'TEST'
 
 // exports the versions so it can be used by the new Swagger endpoint
 exports.version = version;

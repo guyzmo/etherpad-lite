@@ -74,6 +74,15 @@ exports.listSessionsOfAuthor = sessionManager.listSessionsOfAuthor;
 /**PAD CONTENT FUNCTIONS*/
 /************************/
 
+exports.getAttributePool = function (padID, callback)
+{
+    getPadSafe(padID, true, function(err, pad)
+    {
+        if (ERR(err, callback)) return;
+        callback(null, {pool: pad.pool});
+    });
+};
+
 /**
 getText(padID, [rev]) returns the text of a pad 
 
@@ -367,6 +376,82 @@ exports.getRevisionsCount = function(padID, callback)
     if(ERR(err, callback)) return;
     
     callback(null, {revisions: pad.getHeadRevisionNumber()});
+  });
+}
+/**
+getText(padID, [rev]) returns the text of a pad 
+
+Example returns:
+
+{code: 0, message:"ok", data: {text:"Welcome Text"}}
+{code: 1, message:"padID does not exist", data: null}
+*/
+exports.getRevisionChangeset = function(padID, rev, callback)
+{
+  //check if rev is set
+  if(typeof rev == "function")
+  {
+    callback = rev;
+    rev = undefined;
+  }
+  
+  //check if rev is a number
+  if(rev !== undefined && typeof rev != "number")
+  {
+    //try to parse the number
+    if(!isNaN(parseInt(rev)))
+    {
+      rev = parseInt(rev);
+    }
+    else
+    {
+      callback(new customError("rev is not a number", "apierror"));
+      return;
+    }
+  }
+  
+  //ensure this is not a negativ number
+  if(rev !== undefined && rev < 0)
+  {
+    callback(new customError("rev is a negativ number","apierror"));
+    return;
+  }
+  
+  //ensure this is not a float value
+  if(rev !== undefined && !is_int(rev))
+  {
+    callback(new customError("rev is a float value","apierror"));
+    return;
+  }
+  
+  //get the pad
+  getPadSafe(padID, true, function(err, pad)
+  {
+    if(ERR(err, callback)) return;
+    
+    //the client asked for a special revision
+    if(rev !== undefined)
+    {
+      //check if this is a valid revision
+      if(rev > pad.getHeadRevisionNumber())
+      {
+        callback(new customError("rev is higher than the head revision of the pad","apierror"));
+        return;
+      }
+      
+      //get the text of this revision
+      pad.getRevisionChangeset(rev, function(err, changeset)
+      {
+        if(ERR(err, callback)) return;
+        
+        callback(null, changeset);
+      })
+    }
+    //the client wants the latest text, lets return it to him
+    else
+    {
+      callback(null, {"text": pad.getRevisionChangeset(pad.getHeadRevisionNumber())});
+    }
   });
 }
 
